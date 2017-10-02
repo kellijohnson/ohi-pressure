@@ -50,6 +50,7 @@ unlink(temp)
 devtools::install_github("oharac/provRmd")
 devtools::install_github("ohi-science/ohicore@master")
 devtools::install_github("ohi-science/ohirepos")
+devtools::install_github("ropensci/git2r")
 
 library(devtools)
 library(doParallel)
@@ -57,7 +58,7 @@ library(dplyr)
 library(foreach)
 library(geojsonio)
 library(ggplot2)
-library(git2r) # devtools::install_github("ropensci/git2r")
+library(git2r) 
 library(knitr)
 library(lattice)
 library(maptools)
@@ -100,11 +101,23 @@ p4s_wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
 cols <- rev(colorRampPalette(brewer.pal(9, "Spectral"))(255))
 ocean <- raster(file.path(dir.data, "ocean.tif"))
-ocean_shp <- readOGR(file.path(dir.data), layer = "regions_gcs")
+ocean_shp <- rgdal::readOGR(file.path(dir.data), layer = "regions_gcs")
 land <- ocean_shp %>%
   subset(rgn_typ %in% c("land", "land-disputed", "land-noeez"))
+
+
+###############################################################################
+#### Cluster
+###############################################################################
+cl <- makePSOCKcluster(10)
+registerDoParallel(cl)
 
 ###############################################################################
 #### Code
 ###############################################################################
 source(file.path(dir.pressure, "ohi-pressure_oa.R"))
+
+###############################################################################
+#### Cluster
+###############################################################################
+stopCluster(cl)
