@@ -1,7 +1,6 @@
 
 #
 key <- "pressure"
-cols <- rev(colorRampPalette(brewer.pal(9, "Spectral"))(255))
 
 ###############################################################################
 #### Setup file structure
@@ -99,6 +98,7 @@ library(truncnorm)
 mollCRS <- crs("+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs")
 p4s_wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
+cols <- rev(colorRampPalette(brewer.pal(9, "Spectral"))(255))
 ocean <- raster(file.path(dir.data, "ocean.tif"))
 ocean_shp <- readOGR(file.path(dir.data), layer = "regions_gcs")
 land <- ocean_shp %>%
