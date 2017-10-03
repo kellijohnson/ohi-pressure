@@ -17,6 +17,13 @@ setwd(dir.main)
 dir.create(dir.pressure, showWarnings = FALSE)
 dir.create(dir.data, showWarnings = FALSE)
 
+# Create a folder for temporary files, these files are written to the disk
+# when there is not enough storage in the memory to keep them. The folder will
+# be used by rater functions.
+dir.temp <- file.path(dir.data, "temp")
+dir.create(dir.temp, showWarnings = FALSE)
+raster::rasterOptions(tmpdir = dir.temp)
+
 ###############################################################################
 #### Download the necessary github folders and files
 ###############################################################################
@@ -118,6 +125,7 @@ registerDoParallel(cl)
 source(file.path(dir.pressure, "ohi-pressure_oa.R"))
 
 ###############################################################################
-#### Cluster
+#### End
 ###############################################################################
 stopCluster(cl)
+unlink(dir.temp, recursive = TRUE)

@@ -30,14 +30,6 @@
 file_sst <- file.path(dir.data, "cortadv5_WeeklySST.nc")
 file_ssta <- file.path(dir.data, "cortadv5_SSTA.nc")
 
-#set working directory
-setwd(file.path(dir_M,"git-annex/globalprep/prs_sst"))
-# set tmp directory
-
-dir.temp <- file.path(dir.data, "temp")
-dir.create(dir.temp, showWarnings = FALSE)
-raster::rasterOptions(tmpdir = dir.temp)
-
 ssta         <- stack(file_ssta, varname = "SSTA")
 weekly_sst   <- stack(file_sst, varname = "WeeklySST")
 names_ssta   <- names(ssta)
