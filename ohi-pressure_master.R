@@ -41,9 +41,11 @@ unzip(temp, exdir = dir.data)
 download.file(
   "https://ohi.nceas.ucsb.edu/data/data/spatial_ohi_supplement.zip", temp)
 unzip(temp, exdir = dir.data)
-download.file(
-  "https://ohi.nceas.ucsb.edu/data/data/acid.zip", temp)
 unzip(temp, exdir = dir.data)
+# OA data
+# download.file(
+#   "https://ohi.nceas.ucsb.edu/data/data/acid.zip", temp)
+# unzip(temp, exdir = dir.data)
 
 download.file("https://raw.githubusercontent.com/OHI-Science/ohiprep/master/globalprep/spatial/v2013/rgn_labels.csv", temp)
 get_rgn_names <- read.table(temp, sep = ",", header = TRUE)[, c(1, 3)]
