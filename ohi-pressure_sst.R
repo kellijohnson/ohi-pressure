@@ -46,7 +46,7 @@ foreach(i = 1:53) %dopar% {
   }
   sd <- calc(s, fun = function(x){sd(x, na.rm = TRUE)},
     progress = "text", 
-    filename = file.path(dir.data, paste("sd_sst_week_", i,".tif")))
+    filename = file.path(dir.data, paste0("sd_sst_week_", i,".tif")))
 }
 
 # Calculate annual positive anomalies
