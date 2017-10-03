@@ -81,7 +81,8 @@ l <- list.files(dir.temp,
 
 foreach(i = 1986:2008) %dopar% {
   yrs <- c(i:(i+4))
-  s   <- stack(l[substr(l,81,84)%in%yrs]) %>% sum(.)
+  lyrs <- as.numeric(sapply(lapply(strsplit(l, "_|\\."), tail, 2), "[[", 1))
+  s   <- stack(l[lyrs %in% yrs]) %>% sum(.)
   #calc diff between recent 5 year mean and ref
   diff <- overlay(s, ref,
     fun = function(x,y){x-y}) %>% mask(land, inverse = TRUE)
@@ -111,7 +112,7 @@ sprintf("Rescaling")
 
 foreach(i = 1:length(diffs)) %dopar% {
   r <- raster(diffs[i])
-  yrs <- substr(diffs[i], 20, 28)
+  yrs <- as.numeric(strsplit(diffs[i], "[[:digit:]]{4}-")[[1]][2])
   projection(r) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   out <- projectRaster(r, crs = mollCRS, over = TRUE) %>%
     calc(.,
