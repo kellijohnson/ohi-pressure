@@ -41,6 +41,12 @@ unzip(temp, exdir = dir.data)
 download.file(
   "https://ohi.nceas.ucsb.edu/data/data/spatial_ohi_supplement.zip", temp)
 unzip(temp, exdir = dir.data)
+# SST data
+download.file("ftp://ftp.nodc.noaa.gov/pub/data.nodc/cortad/Version5/cortadv5_WeeklySST.nc",
+  temp)
+unzip(temp, exdir = dir.data)
+download.file("ftp://ftp.nodc.noaa.gov/pub/data.nodc/cortad/Version5/cortadv5_SSTA.nc",
+  temp)
 unzip(temp, exdir = dir.data)
 # OA data
 # download.file(
