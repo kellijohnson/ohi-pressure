@@ -47,6 +47,7 @@ foreach(i = 1:53) %dopar% {
   sd <- calc(s, fun = function(x){sd(x, na.rm = TRUE)},
     progress = "text", 
     filename = file.path(dir.data, paste0("sd_sst_week_", i,".tif")))
+  rm(s, sd)
 }
 
 # Calculate annual positive anomalies
@@ -67,6 +68,7 @@ foreach(i = 1982:2012) %dopar% {
     progress = "text",
     filename = file.path(dir.temp, paste0("annual_pos_anomalies_sd_", i, ".tif")),
     overwrite = TRUE)
+  rm(s, year)
 }
 
 ###############################################################################
@@ -74,22 +76,24 @@ foreach(i = 1982:2012) %dopar% {
 ###############################################################################
 l <- list.files(dir.temp,
   pattern = "annual_pos_anomalies", full.names = TRUE)
+lyrs <- as.numeric(sapply(lapply(strsplit(l, "_|\\."), tail, 2), "[[", 1))
 
 # Get 5 year aggregates
   # 5-year historical comparison
   ref <- stack(l[4:8]) %>% sum(.)
 
-foreach(i = 1986:2008) %dopar% {
+foreach(i = 1986:1987, .packages = c("dplyr", "raster")) %dopar% {
+# foreach(i = 1986:2008, .packages = "dplyr") %dopar% {
   yrs <- c(i:(i+4))
-  lyrs <- as.numeric(sapply(lapply(strsplit(l, "_|\\."), tail, 2), "[[", 1))
-  s   <- stack(l[lyrs %in% yrs]) %>% sum(.)
+  s <- raster::stack(l[lyrs%in%yrs])
   #calc diff between recent 5 year mean and ref
-  diff <- overlay(s, ref,
+  diff <- raster::overlay(s, ref,
     fun = function(x,y){x-y}) %>% mask(land, inverse = TRUE)
   writeRaster(diff,
     filename = file.path(dir.data,
       paste0("sst_diff_ocean_", yrs[1], "-", yrs[5],".tif")),
       overwrite = TRUE)
+  rm(diff, s)
 }
 
 ###############################################################################
@@ -122,6 +126,7 @@ foreach(i = 1:length(diffs)) %dopar% {
           filename = file.path(dir.data,
             paste0("sst_", yrs, "_1985-1989.tif")),
           overwrite = TRUE)
+  rm(out)
 }
 
 res <- list.files(file.path(dir.data, "_1985-1989.tif"), full.names = TRUE)
