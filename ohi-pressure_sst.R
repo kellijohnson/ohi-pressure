@@ -82,8 +82,7 @@ lyrs <- as.numeric(sapply(lapply(strsplit(l, "_|\\."), tail, 2), "[[", 1))
   # 5-year historical comparison
   ref <- stack(l[4:8]) %>% sum(.)
 
-foreach(i = 1986:1987, .packages = c("dplyr", "raster")) %dopar% {
-# foreach(i = 1986:2008, .packages = "dplyr") %dopar% {
+foreach(i = 1986:2008, .packages = c("dplyr", "raster")) %dopar% {
   yrs <- c(i:(i+4))
   s <- raster::stack(l[lyrs%in%yrs])
   #calc diff between recent 5 year mean and ref
