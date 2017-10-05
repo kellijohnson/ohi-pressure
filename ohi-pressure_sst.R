@@ -115,20 +115,20 @@ sprintf("Rescaling")
 
 foreach(i = 1:length(diffs)) %dopar% {
   r <- raster(diffs[i])
-  yrs <- as.numeric(strsplit(diffs[i], "[[:digit:]]{4}-")[[1]][2])
+  yrs <- as.numeric(gsub("\\.tif", "", strsplit(diffs[i], "[[:digit:]]{4}-")[[1]][2]))
   projection(r) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   out <- projectRaster(r, crs = mollCRS, over = TRUE) %>%
     calc(.,
       fun = function(x){ifelse(x > 0,
         ifelse(x > resc_num, 1, x / resc_num), 0)}) %>%
-        resample(., ocean, method = "ngb",
+        raster::resample(., ocean, method = "ngb",
           filename = file.path(dir.data,
             paste0("sst_", yrs, "_1985-1989.tif")),
           overwrite = TRUE)
   rm(out)
 }
 
-res <- list.files(file.path(dir.data, "_1985-1989.tif"), full.names = TRUE)
+res <- list.files(dir.data, pattern = "_1985-1989.tif", full.names = TRUE)
 
 plot(raster(res[23]), col = cols, axes = FALSE,
   main = "Sea Surface Temperature Pressure Layer \n OHI 2016")
